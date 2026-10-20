@@ -1,0 +1,426 @@
+{
+  "schema_version": "1.0",
+  "scanner_version": "1.0.0",
+  "scan_id": "fa5de6ec-3703-4356-814b-7111a2588049",
+  "mode": "demo",
+  "started_at": "2026-10-20T09:13:10.206249+00:00",
+  "completed_at": "2026-10-20T09:13:10.209508+00:00",
+  "account_id": "111122223333",
+  "partition": "aws",
+  "regions": [
+    "us-east-1",
+    "eu-west-1"
+  ],
+  "status": "complete",
+  "summary": {
+    "total": 13,
+    "critical": 2,
+    "high": 7,
+    "medium": 3,
+    "low": 1,
+    "informational": 0
+  },
+  "coverage": [
+    {
+      "family": "s3_public",
+      "scope": "all-account-buckets",
+      "status": "complete",
+      "resources_discovered": 3
+    },
+    {
+      "family": "iam_mfa",
+      "scope": "global",
+      "status": "complete",
+      "resources_discovered": 3
+    },
+    {
+      "family": "iam_policy",
+      "scope": "global",
+      "status": "complete",
+      "resources_discovered": 6
+    },
+    {
+      "family": "security_groups",
+      "scope": "us-east-1",
+      "status": "complete",
+      "resources_discovered": 2
+    },
+    {
+      "family": "security_groups",
+      "scope": "eu-west-1",
+      "status": "complete",
+      "resources_discovered": 2
+    }
+  ],
+  "errors": [],
+  "findings": [
+    {
+      "check_id": "SG_OPEN_INGRESS",
+      "family": "security_groups",
+      "resource": "arn:aws:ec2:us-east-1:111122223333:security-group/sg-00000000000000000",
+      "region": "us-east-1",
+      "issue": "Security group permits universal-source ingress",
+      "severity": "critical",
+      "risk": "This rule permits traffic at the security-group layer. Actual internet reachability depends on attachments, addresses, routes, NACLs and listening services.",
+      "remediation": "Replace universal CIDRs with approved source ranges or security-group references. For intentional public web ingress, document the owner and justification. Restrict outbound traffic to required destinations and protocols.",
+      "evidence": {
+        "direction": "ingress",
+        "protocol": "-1",
+        "from_port": null,
+        "to_port": null,
+        "cidrs": [
+          "0.0.0.0/0"
+        ],
+        "sensitive_ports": [],
+        "vpc_id": "vpc-00000000000000000",
+        "group_name": "fictional-group-0"
+      },
+      "confidence": "configuration",
+      "id": "ecab8b3ef48be632c80d"
+    },
+    {
+      "check_id": "IAM_BROAD_POLICY",
+      "family": "iam_policy",
+      "resource": "arn:aws:iam::111122223333:policy/FictionalAdministrator",
+      "region": "global",
+      "issue": "Broad Allow statement requires least-privilege review",
+      "severity": "critical",
+      "risk": "This statement is a policy-risk candidate, not proof of effective permission. Conditions, explicit denies, permission boundaries, SCPs and session policies may constrain it.",
+      "remediation": "Replace broad grants with the actions and resources the workload needs. Review the statement in its attached identity context, including conditions, denies and organisational controls, before changing it.",
+      "evidence": {
+        "statement_index": 0,
+        "sid": null,
+        "reasons": [
+          "All actions are allowed by this statement",
+          "Sensitive actions apply across a broad resource scope"
+        ],
+        "action": "*",
+        "not_action": null,
+        "resource": "*",
+        "not_resource": null,
+        "condition": {},
+        "document_has_denies": false,
+        "source": "attached-managed",
+        "sensitive_actions_matched": [
+          "iam:attachgrouppolicy",
+          "iam:attachrolepolicy",
+          "iam:attachuserpolicy",
+          "iam:createaccesskey",
+          "iam:createloginprofile",
+          "iam:createpolicyversion",
+          "iam:passrole",
+          "iam:putgrouppolicy",
+          "iam:putrolepolicy",
+          "iam:putuserpolicy",
+          "iam:setdefaultpolicyversion",
+          "iam:updateassumerolepolicy",
+          "iam:updateloginprofile",
+          "kms:putkeypolicy",
+          "s3:deletebucketpolicy",
+          "s3:putbucketpolicy",
+          "secretsmanager:getsecretvalue",
+          "sts:assumerole"
+        ]
+      },
+      "confidence": "review_required",
+      "id": "85f6ae44320db79ba471"
+    },
+    {
+      "check_id": "SG_OPEN_INGRESS",
+      "family": "security_groups",
+      "resource": "arn:aws:ec2:eu-west-1:111122223333:security-group/sg-00000000000000002",
+      "region": "eu-west-1",
+      "issue": "Security group permits universal-source ingress",
+      "severity": "high",
+      "risk": "This rule permits traffic at the security-group layer. Actual internet reachability depends on attachments, addresses, routes, NACLs and listening services.",
+      "remediation": "Replace universal CIDRs with approved source ranges or security-group references. For intentional public web ingress, document the owner and justification. Restrict outbound traffic to required destinations and protocols.",
+      "evidence": {
+        "direction": "ingress",
+        "protocol": "tcp",
+        "from_port": 5400,
+        "to_port": 5500,
+        "cidrs": [
+          "0.0.0.0/0"
+        ],
+        "sensitive_ports": [
+          5432
+        ],
+        "vpc_id": "vpc-00000000000000000",
+        "group_name": "fictional-group-2"
+      },
+      "confidence": "configuration",
+      "id": "c11554d8bdf3275aa1bc"
+    },
+    {
+      "check_id": "SG_OPEN_INGRESS",
+      "family": "security_groups",
+      "resource": "arn:aws:ec2:us-east-1:111122223333:security-group/sg-00000000000000001",
+      "region": "us-east-1",
+      "issue": "Security group permits universal-source ingress",
+      "severity": "high",
+      "risk": "This rule permits traffic at the security-group layer. Actual internet reachability depends on attachments, addresses, routes, NACLs and listening services.",
+      "remediation": "Replace universal CIDRs with approved source ranges or security-group references. For intentional public web ingress, document the owner and justification. Restrict outbound traffic to required destinations and protocols.",
+      "evidence": {
+        "direction": "ingress",
+        "protocol": "tcp",
+        "from_port": 22,
+        "to_port": 22,
+        "cidrs": [
+          "::/0"
+        ],
+        "sensitive_ports": [
+          22
+        ],
+        "vpc_id": "vpc-00000000000000000",
+        "group_name": "fictional-group-1"
+      },
+      "confidence": "configuration",
+      "id": "e34a45a01ccee2b151ae"
+    },
+    {
+      "check_id": "IAM_BROAD_POLICY",
+      "family": "iam_policy",
+      "resource": "arn:aws:iam::111122223333:policy/FictionalNotAction",
+      "region": "global",
+      "issue": "Broad Allow statement requires least-privilege review",
+      "severity": "high",
+      "risk": "This statement is a policy-risk candidate, not proof of effective permission. Conditions, explicit denies, permission boundaries, SCPs and session policies may constrain it.",
+      "remediation": "Replace broad grants with the actions and resources the workload needs. Review the statement in its attached identity context, including conditions, denies and organisational controls, before changing it.",
+      "evidence": {
+        "statement_index": 0,
+        "sid": null,
+        "reasons": [
+          "Allow with NotAction grants actions beyond the listed exclusions"
+        ],
+        "action": null,
+        "not_action": "iam:*",
+        "resource": "*",
+        "not_resource": null,
+        "condition": {},
+        "document_has_denies": false,
+        "source": "inline-role",
+        "sensitive_actions_matched": []
+      },
+      "confidence": "review_required",
+      "id": "a454bfde085b42fa849d"
+    },
+    {
+      "check_id": "IAM_BROAD_POLICY",
+      "family": "iam_policy",
+      "resource": "arn:aws:iam::111122223333:policy/FictionalPassRole",
+      "region": "global",
+      "issue": "Broad Allow statement requires least-privilege review",
+      "severity": "high",
+      "risk": "This statement is a policy-risk candidate, not proof of effective permission. Conditions, explicit denies, permission boundaries, SCPs and session policies may constrain it.",
+      "remediation": "Replace broad grants with the actions and resources the workload needs. Review the statement in its attached identity context, including conditions, denies and organisational controls, before changing it.",
+      "evidence": {
+        "statement_index": 0,
+        "sid": null,
+        "reasons": [
+          "Sensitive actions apply across a broad resource scope"
+        ],
+        "action": "iam:PassRole",
+        "not_action": null,
+        "resource": "*",
+        "not_resource": null,
+        "condition": {},
+        "document_has_denies": false,
+        "source": "attached-managed",
+        "sensitive_actions_matched": [
+          "iam:passrole"
+        ]
+      },
+      "confidence": "review_required",
+      "id": "da36e7f7476ffd77eb3c"
+    },
+    {
+      "check_id": "IAM_USER_NO_MFA",
+      "family": "iam_mfa",
+      "resource": "arn:aws:iam::111122223333:user/fictional-operator",
+      "region": "global",
+      "issue": "IAM user has no registered MFA device",
+      "severity": "high",
+      "risk": "An unprotected console password increases account takeover risk. MFA enrollment alone does not enforce MFA for access-key API requests.",
+      "remediation": "For human access, prefer federation/Identity Center with enforced MFA. If this IAM user remains, register MFA and enforce it through access policy; replace workload users with roles.",
+      "evidence": {
+        "console_password": true,
+        "registered_mfa_devices": 0
+      },
+      "confidence": "configuration",
+      "id": "68a22c897ddb5aa586b1"
+    },
+    {
+      "check_id": "S3_PUBLIC_ACL",
+      "family": "s3_public",
+      "resource": "arn:aws:s3:::fictional-public-acl",
+      "region": "eu-west-1",
+      "issue": "Bucket ACL contains public grants",
+      "severity": "high",
+      "risk": "A global ACL grant may permit unintended bucket access. Public does not prove network reachability or object access.",
+      "remediation": "Review the grants, remove unintended global grantees, and enable IgnorePublicAcls and BlockPublicAcls at the appropriate scopes.",
+      "evidence": {
+        "account_public_access_block": {
+          "BlockPublicAcls": false,
+          "IgnorePublicAcls": false,
+          "BlockPublicPolicy": false,
+          "RestrictPublicBuckets": false
+        },
+        "bucket_public_access_block": {
+          "BlockPublicAcls": false,
+          "IgnorePublicAcls": false,
+          "BlockPublicPolicy": false,
+          "RestrictPublicBuckets": false
+        },
+        "scope_note": "Bucket/account configuration only; organisation controls and object ACLs are not evaluated.",
+        "public_grants": [
+          {
+            "Grantee": {
+              "Type": "Group",
+              "URI": "http://acs.amazonaws.com/groups/global/AllUsers"
+            },
+            "Permission": "WRITE"
+          }
+        ],
+        "ignore_public_acls": false
+      },
+      "confidence": "configuration",
+      "id": "1a02138302db31e234f2"
+    },
+    {
+      "check_id": "S3_PUBLIC_POLICY",
+      "family": "s3_public",
+      "resource": "arn:aws:s3:::fictional-public-policy",
+      "region": "us-east-1",
+      "issue": "S3 classifies the bucket policy as public",
+      "severity": "high",
+      "risk": "The bucket policy is classified as public by S3 and the observed controls do not establish that public access is restricted.",
+      "remediation": "Review bucket-policy principals and conditions; remove unintended public access and enable RestrictPublicBuckets and BlockPublicPolicy where appropriate.",
+      "evidence": {
+        "account_public_access_block": {
+          "BlockPublicAcls": false,
+          "IgnorePublicAcls": false,
+          "BlockPublicPolicy": false,
+          "RestrictPublicBuckets": false
+        },
+        "bucket_public_access_block": {
+          "BlockPublicAcls": false,
+          "IgnorePublicAcls": false,
+          "BlockPublicPolicy": false,
+          "RestrictPublicBuckets": false
+        },
+        "scope_note": "Bucket/account configuration only; organisation controls and object ACLs are not evaluated.",
+        "is_public": true,
+        "restrict_public_buckets": false
+      },
+      "confidence": "configuration",
+      "id": "18c9c156a196fc77e7a8"
+    },
+    {
+      "check_id": "SG_OPEN_INGRESS",
+      "family": "security_groups",
+      "resource": "arn:aws:ec2:eu-west-1:111122223333:security-group/sg-00000000000000002",
+      "region": "eu-west-1",
+      "issue": "Security group permits universal-source ingress",
+      "severity": "medium",
+      "risk": "This rule permits traffic at the security-group layer. Actual internet reachability depends on attachments, addresses, routes, NACLs and listening services.",
+      "remediation": "Replace universal CIDRs with approved source ranges or security-group references. For intentional public web ingress, document the owner and justification. Restrict outbound traffic to required destinations and protocols.",
+      "evidence": {
+        "direction": "ingress",
+        "protocol": "tcp",
+        "from_port": 443,
+        "to_port": 443,
+        "cidrs": [
+          "0.0.0.0/0"
+        ],
+        "sensitive_ports": [],
+        "vpc_id": "vpc-00000000000000000",
+        "group_name": "fictional-group-2"
+      },
+      "confidence": "configuration",
+      "id": "79f07c75bf4c0a36b690"
+    },
+    {
+      "check_id": "IAM_BROAD_POLICY",
+      "family": "iam_policy",
+      "resource": "arn:aws:iam::111122223333:policy/FictionalConditionalS3",
+      "region": "global",
+      "issue": "Broad Allow statement requires least-privilege review",
+      "severity": "medium",
+      "risk": "This statement is a policy-risk candidate, not proof of effective permission. Conditions, explicit denies, permission boundaries, SCPs and session policies may constrain it.",
+      "remediation": "Replace broad grants with the actions and resources the workload needs. Review the statement in its attached identity context, including conditions, denies and organisational controls, before changing it.",
+      "evidence": {
+        "statement_index": 0,
+        "sid": null,
+        "reasons": [
+          "An entire service action namespace is allowed",
+          "Sensitive actions apply across a broad resource scope"
+        ],
+        "action": "s3:*",
+        "not_action": null,
+        "resource": "*",
+        "not_resource": null,
+        "condition": {
+          "StringEquals": {
+            "aws:PrincipalTag/Team": "review"
+          }
+        },
+        "document_has_denies": false,
+        "source": "attached-managed",
+        "sensitive_actions_matched": [
+          "s3:deletebucketpolicy",
+          "s3:putbucketpolicy"
+        ]
+      },
+      "confidence": "review_required",
+      "id": "039026faf115e859cfcb"
+    },
+    {
+      "check_id": "IAM_USER_NO_MFA",
+      "family": "iam_mfa",
+      "resource": "arn:aws:iam::111122223333:user/fictional-legacy-workload",
+      "region": "global",
+      "issue": "IAM user has no registered MFA device",
+      "severity": "medium",
+      "risk": "An unprotected console password increases account takeover risk. MFA enrollment alone does not enforce MFA for access-key API requests.",
+      "remediation": "For human access, prefer federation/Identity Center with enforced MFA. If this IAM user remains, register MFA and enforce it through access policy; replace workload users with roles.",
+      "evidence": {
+        "console_password": false,
+        "registered_mfa_devices": 0
+      },
+      "confidence": "configuration",
+      "id": "8bce8633d01ae205dbc0"
+    },
+    {
+      "check_id": "SG_UNRESTRICTED_EGRESS",
+      "family": "security_groups",
+      "resource": "arn:aws:ec2:us-east-1:111122223333:security-group/sg-00000000000000000",
+      "region": "us-east-1",
+      "issue": "Security group permits unrestricted outbound traffic",
+      "severity": "low",
+      "risk": "This rule permits traffic at the security-group layer. Actual internet reachability depends on attachments, addresses, routes, NACLs and listening services.",
+      "remediation": "Replace universal CIDRs with approved source ranges or security-group references. For intentional public web ingress, document the owner and justification. Restrict outbound traffic to required destinations and protocols.",
+      "evidence": {
+        "direction": "egress",
+        "protocol": "-1",
+        "from_port": null,
+        "to_port": null,
+        "cidrs": [
+          "0.0.0.0/0"
+        ],
+        "sensitive_ports": [],
+        "vpc_id": "vpc-00000000000000000",
+        "group_name": "fictional-group-0"
+      },
+      "confidence": "configuration",
+      "id": "9c19e1f7259f99107be1"
+    }
+  ],
+  "limitations": [
+    "This is a configuration review, not a penetration test or proof of internet reachability.",
+    "S3 coverage is bucket ACLs and S3 policy-public status, with observed bucket/account Block Public Access. Object ACLs, access points and organisation-level controls are excluded.",
+    "IAM policy checks inspect attached managed permission policies and user/role/group inline policies. They do not compute effective permissions, trust policies, SCPs, permission boundaries or session policies.",
+    "IAM MFA checks cover IAM users, not the root user, federated identities or Identity Center. Enrollment is distinct from enforcement.",
+    "Security-group checks cover universal IPv4/IPv6 CIDRs and unrestricted egress in explicitly selected regions; routes, NACLs, attachments and combinations of non-universal CIDRs are not evaluated."
+  ],
+  "review_note": "SYNTHETIC DEMO: these resources are fictional; this is not an AWS account assessment."
+}

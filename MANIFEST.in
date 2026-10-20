@@ -1,0 +1,7 @@
+include README.md SECURITY.md LICENSE requirements.txt requirements-dev.txt
+recursive-include tests *.py
+recursive-include scripts *.py *.ps1
+recursive-include docs *.md
+recursive-include iam *.json
+recursive-include examples *.json *.md *.html
+recursive-include src/posture_scanner/data *.json

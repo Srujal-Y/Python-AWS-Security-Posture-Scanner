@@ -1,0 +1,869 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AWS posture inventory v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "account_id": {
+      "type": "string",
+      "pattern": "^(?:[0-9]{12}|unknown)$"
+    },
+    "partition": {
+      "type": "string",
+      "pattern": "^aws(?:-[a-z0-9]+)*$"
+    },
+    "regions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z]{2}(?:-[a-z]+)+-\\d+$"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "buckets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "region": {
+            "type": "string",
+            "pattern": "^[a-z]{2}(?:-[a-z]+)+-\\d+$"
+          },
+          "account_block": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "BlockPublicAcls": {
+                    "type": "boolean"
+                  },
+                  "IgnorePublicAcls": {
+                    "type": "boolean"
+                  },
+                  "BlockPublicPolicy": {
+                    "type": "boolean"
+                  },
+                  "RestrictPublicBuckets": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "BlockPublicAcls",
+                  "IgnorePublicAcls",
+                  "BlockPublicPolicy",
+                  "RestrictPublicBuckets"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "bucket_block": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "BlockPublicAcls": {
+                    "type": "boolean"
+                  },
+                  "IgnorePublicAcls": {
+                    "type": "boolean"
+                  },
+                  "BlockPublicPolicy": {
+                    "type": "boolean"
+                  },
+                  "RestrictPublicBuckets": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "BlockPublicAcls",
+                  "IgnorePublicAcls",
+                  "BlockPublicPolicy",
+                  "RestrictPublicBuckets"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "grants": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "Grantee": {
+                      "type": "object",
+                      "properties": {
+                        "Type": {
+                          "enum": [
+                            "CanonicalUser",
+                            "AmazonCustomerByEmail",
+                            "Group"
+                          ]
+                        },
+                        "URI": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "ID": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "DisplayName": {
+                          "type": "string"
+                        },
+                        "EmailAddress": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "Type"
+                      ],
+                      "additionalProperties": true
+                    },
+                    "Permission": {
+                      "enum": [
+                        "FULL_CONTROL",
+                        "WRITE",
+                        "WRITE_ACP",
+                        "READ",
+                        "READ_ACP"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "Grantee",
+                    "Permission"
+                  ],
+                  "additionalProperties": true
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "policy_public": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "region",
+          "account_block",
+          "bucket_block",
+          "grants",
+          "policy_public"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "users": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "arn": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mfa_devices": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "console_password": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "arn",
+          "mfa_devices",
+          "console_password"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "policies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "arn": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "enum": [
+              "attached-managed",
+              "inline-user",
+              "inline-role",
+              "inline-group"
+            ]
+          },
+          "document": {
+            "type": "object",
+            "properties": {
+              "Version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "Id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "Statement": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "Effect": {
+                        "enum": [
+                          "Allow",
+                          "Deny"
+                        ]
+                      },
+                      "Sid": {
+                        "type": "string"
+                      },
+                      "Action": {
+                        "oneOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "minItems": 1
+                          }
+                        ]
+                      },
+                      "NotAction": {
+                        "oneOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "minItems": 1
+                          }
+                        ]
+                      },
+                      "Resource": {
+                        "oneOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "minItems": 1
+                          }
+                        ]
+                      },
+                      "NotResource": {
+                        "oneOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "minItems": 1
+                          }
+                        ]
+                      },
+                      "Condition": {
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "Effect"
+                    ],
+                    "additionalProperties": false,
+                    "allOf": [
+                      {
+                        "oneOf": [
+                          {
+                            "required": [
+                              "Action"
+                            ],
+                            "not": {
+                              "required": [
+                                "NotAction"
+                              ]
+                            }
+                          },
+                          {
+                            "required": [
+                              "NotAction"
+                            ],
+                            "not": {
+                              "required": [
+                                "Action"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "oneOf": [
+                          {
+                            "required": [
+                              "Resource"
+                            ],
+                            "not": {
+                              "required": [
+                                "NotResource"
+                              ]
+                            }
+                          },
+                          {
+                            "required": [
+                              "NotResource"
+                            ],
+                            "not": {
+                              "required": [
+                                "Resource"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "Effect": {
+                          "enum": [
+                            "Allow",
+                            "Deny"
+                          ]
+                        },
+                        "Sid": {
+                          "type": "string"
+                        },
+                        "Action": {
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "minItems": 1
+                            }
+                          ]
+                        },
+                        "NotAction": {
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "minItems": 1
+                            }
+                          ]
+                        },
+                        "Resource": {
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "minItems": 1
+                            }
+                          ]
+                        },
+                        "NotResource": {
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "minItems": 1
+                            }
+                          ]
+                        },
+                        "Condition": {
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "Effect"
+                      ],
+                      "additionalProperties": false,
+                      "allOf": [
+                        {
+                          "oneOf": [
+                            {
+                              "required": [
+                                "Action"
+                              ],
+                              "not": {
+                                "required": [
+                                  "NotAction"
+                                ]
+                              }
+                            },
+                            {
+                              "required": [
+                                "NotAction"
+                              ],
+                              "not": {
+                                "required": [
+                                  "Action"
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "oneOf": [
+                            {
+                              "required": [
+                                "Resource"
+                              ],
+                              "not": {
+                                "required": [
+                                  "NotResource"
+                                ]
+                              }
+                            },
+                            {
+                              "required": [
+                                "NotResource"
+                              ],
+                              "not": {
+                                "required": [
+                                  "Resource"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "minItems": 1
+                  }
+                ]
+              }
+            },
+            "required": [
+              "Statement"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "arn",
+          "source",
+          "document"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "security_groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "arn": {
+            "type": "string",
+            "minLength": 1
+          },
+          "region": {
+            "type": "string",
+            "pattern": "^[a-z]{2}(?:-[a-z]+)+-\\d+$"
+          },
+          "GroupId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "IpPermissions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "IpProtocol": {
+                  "type": "string",
+                  "pattern": "^(?:-1|[0-9]{1,3}|tcp|udp|icmp|icmpv6)$"
+                },
+                "FromPort": {
+                  "type": "integer",
+                  "minimum": -1,
+                  "maximum": 65535
+                },
+                "ToPort": {
+                  "type": "integer",
+                  "minimum": -1,
+                  "maximum": 65535
+                },
+                "IpRanges": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "CidrIp": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "CidrIp"
+                    ],
+                    "additionalProperties": true
+                  }
+                },
+                "Ipv6Ranges": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "CidrIpv6": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "CidrIpv6"
+                    ],
+                    "additionalProperties": true
+                  }
+                },
+                "UserIdGroupPairs": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                },
+                "PrefixListIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              },
+              "required": [
+                "IpProtocol"
+              ],
+              "additionalProperties": true,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "IpProtocol": {
+                        "enum": [
+                          "tcp",
+                          "udp",
+                          "6",
+                          "17"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "FromPort",
+                      "ToPort"
+                    ],
+                    "properties": {
+                      "FromPort": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "ToPort": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "IpPermissionsEgress": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "IpProtocol": {
+                  "type": "string",
+                  "pattern": "^(?:-1|[0-9]{1,3}|tcp|udp|icmp|icmpv6)$"
+                },
+                "FromPort": {
+                  "type": "integer",
+                  "minimum": -1,
+                  "maximum": 65535
+                },
+                "ToPort": {
+                  "type": "integer",
+                  "minimum": -1,
+                  "maximum": 65535
+                },
+                "IpRanges": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "CidrIp": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "CidrIp"
+                    ],
+                    "additionalProperties": true
+                  }
+                },
+                "Ipv6Ranges": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "CidrIpv6": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "CidrIpv6"
+                    ],
+                    "additionalProperties": true
+                  }
+                },
+                "UserIdGroupPairs": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                },
+                "PrefixListIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              },
+              "required": [
+                "IpProtocol"
+              ],
+              "additionalProperties": true,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "IpProtocol": {
+                        "enum": [
+                          "tcp",
+                          "udp",
+                          "6",
+                          "17"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "FromPort",
+                      "ToPort"
+                    ],
+                    "properties": {
+                      "FromPort": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "ToPort": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "arn",
+          "region",
+          "GroupId",
+          "IpPermissions",
+          "IpPermissionsEgress"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "coverage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "family": {
+            "enum": [
+              "s3_public",
+              "iam_mfa",
+              "iam_policy",
+              "security_groups"
+            ]
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "complete",
+              "partial",
+              "not_run"
+            ]
+          },
+          "resources_discovered": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "family",
+          "scope",
+          "status",
+          "resources_discovered"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 4
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "family": {
+            "enum": [
+              "identity",
+              "s3_public",
+              "iam_mfa",
+              "iam_policy",
+              "security_groups"
+            ]
+          },
+          "operation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resource": {
+            "type": "string",
+            "minLength": 1
+          },
+          "code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "family",
+          "operation",
+          "resource",
+          "code",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "account_id",
+    "partition",
+    "regions",
+    "buckets",
+    "users",
+    "policies",
+    "security_groups",
+    "coverage",
+    "errors"
+  ],
+  "additionalProperties": false
+}

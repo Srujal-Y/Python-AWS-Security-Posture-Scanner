@@ -1,0 +1,54 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "IdentifyCaller",
+      "Effect": "Allow",
+      "Action": "sts:GetCallerIdentity",
+      "Resource": "*"
+    },
+    {
+      "Sid": "DiscoverBucketsAndAccountPublicAccessControls",
+      "Effect": "Allow",
+      "Action": ["s3:ListAllMyBuckets", "s3:GetAccountPublicAccessBlock"],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ReadBucketExposureMetadata",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetBucketLocation",
+        "s3:GetBucketPublicAccessBlock",
+        "s3:GetBucketAcl",
+        "s3:GetBucketPolicyStatus"
+      ],
+      "Resource": "arn:aws:s3:::*"
+    },
+    {
+      "Sid": "ReadIdentityAndPermissionPolicyMetadata",
+      "Effect": "Allow",
+      "Action": [
+        "iam:ListUsers",
+        "iam:ListMFADevices",
+        "iam:GetLoginProfile",
+        "iam:ListPolicies",
+        "iam:GetPolicyVersion",
+        "iam:ListRoles",
+        "iam:ListGroups",
+        "iam:ListUserPolicies",
+        "iam:GetUserPolicy",
+        "iam:ListRolePolicies",
+        "iam:GetRolePolicy",
+        "iam:ListGroupPolicies",
+        "iam:GetGroupPolicy"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ReadRegionalSecurityGroups",
+      "Effect": "Allow",
+      "Action": "ec2:DescribeSecurityGroups",
+      "Resource": "*"
+    }
+  ]
+}

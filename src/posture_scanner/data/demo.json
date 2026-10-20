@@ -1,0 +1,316 @@
+{
+  "schema_version": "1.0",
+  "account_id": "111122223333",
+  "partition": "aws",
+  "regions": [
+    "us-east-1",
+    "eu-west-1"
+  ],
+  "buckets": [
+    {
+      "name": "fictional-public-policy",
+      "region": "us-east-1",
+      "account_block": {
+        "BlockPublicAcls": false,
+        "IgnorePublicAcls": false,
+        "BlockPublicPolicy": false,
+        "RestrictPublicBuckets": false
+      },
+      "bucket_block": {
+        "BlockPublicAcls": false,
+        "IgnorePublicAcls": false,
+        "BlockPublicPolicy": false,
+        "RestrictPublicBuckets": false
+      },
+      "grants": [],
+      "policy_public": true
+    },
+    {
+      "name": "fictional-public-acl",
+      "region": "eu-west-1",
+      "account_block": {
+        "BlockPublicAcls": false,
+        "IgnorePublicAcls": false,
+        "BlockPublicPolicy": false,
+        "RestrictPublicBuckets": false
+      },
+      "bucket_block": {
+        "BlockPublicAcls": false,
+        "IgnorePublicAcls": false,
+        "BlockPublicPolicy": false,
+        "RestrictPublicBuckets": false
+      },
+      "grants": [
+        {
+          "Grantee": {
+            "Type": "Group",
+            "URI": "http://acs.amazonaws.com/groups/global/AllUsers"
+          },
+          "Permission": "WRITE"
+        }
+      ],
+      "policy_public": false
+    },
+    {
+      "name": "fictional-blocked-acl",
+      "region": "eu-west-1",
+      "account_block": {
+        "BlockPublicAcls": true,
+        "IgnorePublicAcls": true,
+        "BlockPublicPolicy": true,
+        "RestrictPublicBuckets": true
+      },
+      "bucket_block": {
+        "BlockPublicAcls": false,
+        "IgnorePublicAcls": false,
+        "BlockPublicPolicy": false,
+        "RestrictPublicBuckets": false
+      },
+      "grants": [
+        {
+          "Grantee": {
+            "Type": "Group",
+            "URI": "http://acs.amazonaws.com/groups/global/AllUsers"
+          },
+          "Permission": "WRITE"
+        }
+      ],
+      "policy_public": true
+    }
+  ],
+  "users": [
+    {
+      "arn": "arn:aws:iam::111122223333:user/fictional-operator",
+      "console_password": true,
+      "mfa_devices": 0
+    },
+    {
+      "arn": "arn:aws:iam::111122223333:user/fictional-legacy-workload",
+      "console_password": false,
+      "mfa_devices": 0
+    },
+    {
+      "arn": "arn:aws:iam::111122223333:user/fictional-protected-user",
+      "console_password": true,
+      "mfa_devices": 1
+    }
+  ],
+  "policies": [
+    {
+      "arn": "arn:aws:iam::111122223333:policy/FictionalAdministrator",
+      "source": "attached-managed",
+      "document": {
+        "Version": "2012-10-17",
+        "Statement": {
+          "Effect": "Allow",
+          "Action": "*",
+          "Resource": "*"
+        }
+      }
+    },
+    {
+      "arn": "arn:aws:iam::111122223333:policy/FictionalPassRole",
+      "source": "attached-managed",
+      "document": {
+        "Version": "2012-10-17",
+        "Statement": {
+          "Effect": "Allow",
+          "Action": "iam:PassRole",
+          "Resource": "*"
+        }
+      }
+    },
+    {
+      "arn": "arn:aws:iam::111122223333:policy/FictionalConditionalS3",
+      "source": "attached-managed",
+      "document": {
+        "Version": "2012-10-17",
+        "Statement": {
+          "Effect": "Allow",
+          "Action": "s3:*",
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:PrincipalTag/Team": "review"
+            }
+          }
+        }
+      }
+    },
+    {
+      "arn": "arn:aws:iam::111122223333:policy/FictionalDescribe",
+      "source": "attached-managed",
+      "document": {
+        "Version": "2012-10-17",
+        "Statement": {
+          "Effect": "Allow",
+          "Action": "ec2:Describe*",
+          "Resource": "*"
+        }
+      }
+    },
+    {
+      "arn": "arn:aws:iam::111122223333:policy/FictionalExplicitDeny",
+      "source": "attached-managed",
+      "document": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": "*",
+            "Resource": "*"
+          },
+          {
+            "Effect": "Deny",
+            "Action": "*",
+            "Resource": "*"
+          }
+        ]
+      }
+    },
+    {
+      "arn": "arn:aws:iam::111122223333:policy/FictionalNotAction",
+      "source": "inline-role",
+      "document": {
+        "Version": "2012-10-17",
+        "Statement": {
+          "Effect": "Allow",
+          "NotAction": "iam:*",
+          "Resource": "*"
+        }
+      }
+    }
+  ],
+  "security_groups": [
+    {
+      "GroupId": "sg-00000000000000000",
+      "GroupName": "fictional-group-0",
+      "VpcId": "vpc-00000000000000000",
+      "arn": "arn:aws:ec2:us-east-1:111122223333:security-group/sg-00000000000000000",
+      "region": "us-east-1",
+      "IpPermissions": [
+        {
+          "IpProtocol": "-1",
+          "IpRanges": [
+            {
+              "CidrIp": "0.0.0.0/0"
+            }
+          ]
+        }
+      ],
+      "IpPermissionsEgress": [
+        {
+          "IpProtocol": "-1",
+          "IpRanges": [
+            {
+              "CidrIp": "0.0.0.0/0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "GroupId": "sg-00000000000000001",
+      "GroupName": "fictional-group-1",
+      "VpcId": "vpc-00000000000000000",
+      "arn": "arn:aws:ec2:us-east-1:111122223333:security-group/sg-00000000000000001",
+      "region": "us-east-1",
+      "IpPermissions": [
+        {
+          "IpProtocol": "tcp",
+          "Ipv6Ranges": [
+            {
+              "CidrIpv6": "::/0"
+            }
+          ],
+          "FromPort": 22,
+          "ToPort": 22
+        }
+      ],
+      "IpPermissionsEgress": []
+    },
+    {
+      "GroupId": "sg-00000000000000002",
+      "GroupName": "fictional-group-2",
+      "VpcId": "vpc-00000000000000000",
+      "arn": "arn:aws:ec2:eu-west-1:111122223333:security-group/sg-00000000000000002",
+      "region": "eu-west-1",
+      "IpPermissions": [
+        {
+          "IpProtocol": "tcp",
+          "IpRanges": [
+            {
+              "CidrIp": "0.0.0.0/0"
+            }
+          ],
+          "FromPort": 5400,
+          "ToPort": 5500
+        },
+        {
+          "IpProtocol": "tcp",
+          "IpRanges": [
+            {
+              "CidrIp": "0.0.0.0/0"
+            }
+          ],
+          "FromPort": 443,
+          "ToPort": 443
+        }
+      ],
+      "IpPermissionsEgress": []
+    },
+    {
+      "GroupId": "sg-00000000000000003",
+      "GroupName": "fictional-group-3",
+      "VpcId": "vpc-00000000000000000",
+      "arn": "arn:aws:ec2:eu-west-1:111122223333:security-group/sg-00000000000000003",
+      "region": "eu-west-1",
+      "IpPermissions": [
+        {
+          "IpProtocol": "tcp",
+          "IpRanges": [
+            {
+              "CidrIp": "10.0.0.0/16"
+            }
+          ],
+          "FromPort": 5432,
+          "ToPort": 5432
+        }
+      ],
+      "IpPermissionsEgress": []
+    }
+  ],
+  "coverage": [
+    {
+      "family": "s3_public",
+      "scope": "all-account-buckets",
+      "status": "complete",
+      "resources_discovered": 3
+    },
+    {
+      "family": "iam_mfa",
+      "scope": "global",
+      "status": "complete",
+      "resources_discovered": 3
+    },
+    {
+      "family": "iam_policy",
+      "scope": "global",
+      "status": "complete",
+      "resources_discovered": 6
+    },
+    {
+      "family": "security_groups",
+      "scope": "us-east-1",
+      "status": "complete",
+      "resources_discovered": 2
+    },
+    {
+      "family": "security_groups",
+      "scope": "eu-west-1",
+      "status": "complete",
+      "resources_discovered": 2
+    }
+  ],
+  "errors": []
+}

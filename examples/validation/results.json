@@ -1,0 +1,35 @@
+{
+  "recorded_at": "2026-10-20T09:16:17.698432+00:00",
+  "scope": "Local offline validation; fictional resources and mocked AWS APIs only",
+  "python": "3.14.2",
+  "platform": "Windows",
+  "tests": {
+    "tests": 75,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "coverage": {
+    "statements": 421,
+    "covered_statements": 414,
+    "branches": 142,
+    "covered_branches": 137,
+    "combined_percent": 97.87
+  },
+  "runtime_audit": {
+    "dependencies_checked": 12,
+    "known_vulnerabilities": 0,
+    "python_environment": "3.14"
+  },
+  "demo_summary": {
+    "total": 13,
+    "critical": 2,
+    "high": 7,
+    "medium": 3,
+    "low": 1,
+    "informational": 0
+  },
+  "wheel_smoke_test": "Passed in a separate virtual environment outside source directory",
+  "live_aws_validation": "not_performed",
+  "hosted_ci": "not_run"
+}

@@ -1,0 +1,286 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AWS posture report v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "scanner_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scan_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "enum": [
+        "scan",
+        "snapshot",
+        "demo"
+      ]
+    },
+    "started_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "completed_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "account_id": {
+      "type": "string",
+      "pattern": "^(?:[0-9]{12}|unknown)$"
+    },
+    "partition": {
+      "type": "string",
+      "pattern": "^aws(?:-[a-z0-9]+)*$"
+    },
+    "regions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z]{2}(?:-[a-z]+)+-\\d+$"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "status": {
+      "enum": [
+        "complete",
+        "partial"
+      ]
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "critical": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "high": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "medium": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "low": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "informational": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "total",
+        "critical",
+        "high",
+        "medium",
+        "low",
+        "informational"
+      ],
+      "additionalProperties": false
+    },
+    "coverage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "family": {
+            "enum": [
+              "s3_public",
+              "iam_mfa",
+              "iam_policy",
+              "security_groups"
+            ]
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "complete",
+              "partial",
+              "not_run"
+            ]
+          },
+          "resources_discovered": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "family",
+          "scope",
+          "status",
+          "resources_discovered"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "family": {
+            "enum": [
+              "identity",
+              "s3_public",
+              "iam_mfa",
+              "iam_policy",
+              "security_groups"
+            ]
+          },
+          "operation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resource": {
+            "type": "string",
+            "minLength": 1
+          },
+          "code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "family",
+          "operation",
+          "resource",
+          "code",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{20}$"
+          },
+          "check_id": {
+            "enum": [
+              "S3_PUBLIC_ACL",
+              "S3_PUBLIC_POLICY",
+              "IAM_USER_NO_MFA",
+              "IAM_BROAD_POLICY",
+              "SG_OPEN_INGRESS",
+              "SG_UNRESTRICTED_EGRESS"
+            ]
+          },
+          "family": {
+            "enum": [
+              "s3_public",
+              "iam_mfa",
+              "iam_policy",
+              "security_groups"
+            ]
+          },
+          "resource": {
+            "type": "string",
+            "minLength": 1
+          },
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "issue": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "enum": [
+              "critical",
+              "high",
+              "medium",
+              "low",
+              "informational"
+            ]
+          },
+          "risk": {
+            "type": "string",
+            "minLength": 1
+          },
+          "remediation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "object"
+          },
+          "confidence": {
+            "enum": [
+              "configuration",
+              "review_required"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "check_id",
+          "family",
+          "resource",
+          "region",
+          "issue",
+          "severity",
+          "risk",
+          "remediation",
+          "evidence",
+          "confidence"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "review_note": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "scanner_version",
+    "scan_id",
+    "mode",
+    "started_at",
+    "completed_at",
+    "account_id",
+    "partition",
+    "regions",
+    "status",
+    "summary",
+    "coverage",
+    "errors",
+    "findings",
+    "limitations",
+    "review_note"
+  ],
+  "additionalProperties": false
+}
