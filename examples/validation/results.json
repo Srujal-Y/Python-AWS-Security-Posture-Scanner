@@ -31,5 +31,11 @@
   },
   "wheel_smoke_test": "Passed in a separate virtual environment outside source directory",
   "live_aws_validation": "not_performed",
-  "hosted_ci": "not_run"
+  "hosted_ci": {
+    "status": "success",
+    "python_versions": ["3.11", "3.14"],
+    "commit": "37bc92dd8b6c5d1c7e15c52e331a17c68a13c3f5",
+    "run_url": "https://github.com/Srujal-Y/Python-AWS-Security-Posture-Scanner/actions/runs/39401294352",
+    "completed_at": "2026-10-20T09:32:04Z"
+  }
 }

@@ -15,11 +15,13 @@ Local validation date: **20 October 2026**. Environment: Windows, Python 3.14.2.
 | Offline demo | Complete declared coverage; 13 fictional findings; JSON/Markdown/HTML written |
 | Runtime advisory audit on Python 3.14 | No known vulnerabilities reported by pip-audit at the time of the check |
 | Live AWS collection | **Not performed: authorised AWS access is not available** |
-| Hosted GitHub Actions | **Configured, not run for this new project** |
-| Python 3.11 execution | **Configured in CI, not executed locally** |
+| Hosted GitHub Actions | **Passed on Python 3.11 and 3.14**; tests, lint, dependency audit, build and installed-wheel smoke test |
+| Python 3.11 execution | **Passed on the hosted Ubuntu runner**; not executed locally |
 | Independent bank/security/compliance approval | **Not performed or claimed** |
 
 The compact [machine-readable evidence](../examples/validation/results.json) records test and coverage totals. It contains no live AWS data. The [demo report](../examples/demo/report.md) and its source inventory are fictional.
+
+Hosted evidence: [successful CI run on 20 October 2026](https://github.com/Srujal-Y/Python-AWS-Security-Posture-Scanner/actions/runs/39401294352), commit `37bc92dd8b6c5d1c7e15c52e331a17c68a13c3f5`. Both Python jobs completed successfully, including uploaded test and distribution artifacts.
 
 ## What the tests establish
 
@@ -44,7 +46,7 @@ Coverage measures exercised code paths, not detection completeness or production
 .\.venv\Scripts\python.exe -m pip_audit -r requirements.txt --strict --disable-pip --no-deps
 ```
 
-The second command needs network access to advisory data. Audit results can change. The Python 3.11-only conditional dependency is covered by the configured Python 3.11 CI audit when that workflow is run.
+The second command needs network access to advisory data. Audit results can change. The Python 3.11-only conditional dependency was included in the successful Python 3.11 CI audit.
 
 `reports/junit.xml`, `coverage.xml`, `reports/dependency-audit.json`, `reports/demo/` and `dist/` hold local validation artifacts and are intentionally ignored by Git. The committed examples are explicitly fictional and the compact validation summary omits local machine paths.
 

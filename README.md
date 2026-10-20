@@ -13,6 +13,7 @@ Each finding includes a stable ID, affected resource, region, severity, evidence
 | Validation | Recorded result |
 | --- | --- |
 | Automated local tests | 75 passed |
+| Hosted GitHub Actions | [Passed on Python 3.11 and 3.14](https://github.com/Srujal-Y/Python-AWS-Security-Posture-Scanner/actions/runs/39401294352) |
 | Combined statement/branch coverage | 97.87% |
 | Runtime dependency audit | No known vulnerabilities at the recorded audit date |
 | Distribution | Source archive and wheel built; installed CLI tested in an isolated environment |
